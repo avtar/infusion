@@ -1,0 +1,40 @@
+{
+    "test_page": "tests/all-tests.html",
+    "port": 7000,    
+    "parallel": 1,
+    "timeout": 600,
+    "report_file": "report.tap",
+    "disable_watching": true,
+    "on_start": "./tests/lib/testem/saucie-connect.js",
+    "on_exit": "./tests/lib/testem/saucie-disconnect.js",
+    "browser_start_timeout": 180,
+    "browser_disconnect_timeout": 180,
+    "launchers": {
+        "SL_Chrome": {
+            "exe": "./node_modules/saucie/lib/bin.js",
+            "args": ["-b", "chrome", "-p", "Windows 10", "-v", "latest", "--no-ct", "--at", "-u"],
+            "protocol": "browser"
+        },
+        "SL_Firefox": {
+            "exe": "./node_modules/saucie/lib/bin.js",
+            "args": ["-b", "firefox", "-p", "Windows 10", "-v", "latest", "--no-ct", "--at", "-u"],
+            "protocol": "browser"
+        },
+        "SL_Edge": {
+            "exe": "./node_modules/saucie/lib/bin.js",
+            "args": ["-b", "microsoftedge", "--no-ct", "--at", "-u"],
+            "protocol": "browser"
+        },
+        "SL_Safari": {
+            "exe": "./node_modules/saucie/lib/bin.js",
+            "args": ["-b", "safari", "-v", "9", "--no-ct", "--at", "-u"],
+            "protocol": "browser"
+        }
+    },
+    "launch_in_ci": [
+        "SL_Chrome",
+        "SL_Firefox",
+        "SL_Edge",
+        "SL_Safari"
+    ]
+}

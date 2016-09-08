@@ -5,7 +5,24 @@
   vars_files:
     - vars.yml
 
+  pre_tasks:
+    - include_vars: secrets.yml
+      ignore_errors: yes
+      tags:
+        - always
+
   roles:
     - facts
+    - secrets
     - nodejs
 
+  post_tasks:
+    - name: Increase open files limit for Sauce Labs
+      template:
+        src: vagrant-open-files-limit.conf
+        dest: /etc/security/limits.d/90-vagrant.conf
+        owner: root
+        group: root
+        mode: 0644
+      tags:
+        - always

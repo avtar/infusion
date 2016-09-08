@@ -209,6 +209,9 @@ module.exports = function (grunt) {
         shell: {
             runTests: {
                 command: "vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 testem ci --file tests/testem.json'"
+            },
+            runSauceLabsTests: {
+                command: "vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 testem ci --file tests/testem-saucelabs.json'"
             }
         }
     });
@@ -266,4 +269,5 @@ module.exports = function (grunt) {
     grunt.registerTask("lint", "Apply eslint and jsonlint", ["eslint", "jsonlint"]);
 
     grunt.registerTask("tests", "Run tests", ["shell:runTests"]);
+    grunt.registerTask("saucelabs-tests", "Run tests using browsers provided by Sauce Labs", ["shell:runSauceLabsTests"]);
 };
