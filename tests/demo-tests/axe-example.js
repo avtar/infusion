@@ -10,7 +10,6 @@ gpii.webdriver.loadTestingSupport();
 demos.isOverviewPanelCollapsed = function (testEnvironment) {
     console.log("isOverviewPanelCollapsed");
     var locator = gpii.webdriver.By.css(".fl-overviewPanel-body");
-
     var closeControl = testEnvironment.webdriver.findElement(locator);
 
     var promise = closeControl.getSize().then(function (value) {
@@ -18,11 +17,11 @@ demos.isOverviewPanelCollapsed = function (testEnvironment) {
         var width = value.width;
         console.log(height, width);
         var isCollapsed = height < 1 && width < 1;
-        if(isCollapsed) {
-            console.log("panel is collapsed, width and height < 1");
+        if (isCollapsed) {
+            console.log("Panel is collapsed, width and height < 1");
             return true;
         } else {
-            console.log("panel is not yet fully collapsed, width / height > 1");
+            console.log("Panel is not yet fully collapsed, width / height > 1");
             return false;
         }
     });
@@ -70,7 +69,7 @@ fluid.defaults("demos.accessibilityReports", {
                     {
                         event:    "{testEnvironment}.webdriver.events.onActionsHelperComplete",
                         listener: "{testEnvironment}.webdriver.wait",
-                        args:     ["{that}.isOverviewPanelCollapsed", 5000, "Timed out"]
+                        args:     ["{that}.isOverviewPanelCollapsed", 5000, "isOverviewPanelCollapsed timed out"]
                     },
                     {
                         event: "{testEnvironment}.webdriver.events.onWaitComplete",
