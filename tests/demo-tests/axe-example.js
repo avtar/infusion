@@ -7,18 +7,39 @@ var demos = fluid.registerNamespace("demos");
 require("gpii-webdriver");
 gpii.webdriver.loadTestingSupport();
 
-// TODO: Figure out why providing this on line 46 for invocation doesn't work as
-// expected.
-demos.isOverviewPanelCollapsed = function () {
-    //var collapsed = gpii.webdriver.By.css(".fl-overviewPanel-closeControl").getAttribute("aria-expanded");
-    //return collapsed;
-    return true;
+demos.isOverviewPanelCollapsed = function (testEnvironment) {
+    console.log("isOverviewPanelCollapsed");
+    var locator = gpii.webdriver.By.css(".fl-overviewPanel-body");
+
+    var closeControl = testEnvironment.webdriver.findElement(locator);
+
+    var promise = closeControl.getSize().then(function (value) {
+        var height = value.height;
+        var width = value.width;
+        console.log(height, width);
+        var isCollapsed = height < 1 && width < 1;
+        if(isCollapsed) {
+            console.log("panel is collapsed, width and height < 1");
+            return true;
+        } else {
+            console.log("panel is not yet fully collapsed, width / height > 1");
+            return false;
+        }
+    });
+
+    return promise;
 };
 
 fluid.defaults("demos.accessibilityReports", {
     gradeNames: ["gpii.test.webdriver.caseHolder", "gpii.test.webdriver.hasAxeContent"],
+    invokers: {
+        "isOverviewPanelCollapsed": {
+            "funcName": "demos.isOverviewPanelCollapsed",
+            "args": ["{testEnvironment}"]
+        }
+    },
     scriptPaths: {
-        axe: "/home/vagrant/sync/node_modules/axe-core/axe.js"
+        axe: "node_modules/axe-core/axe.js"
     },
     rawModules: [{
         name: "Building accessibility reports...",
@@ -33,6 +54,11 @@ fluid.defaults("demos.accessibilityReports", {
                     },
                     {
                         event:    "{testEnvironment}.webdriver.events.onGetComplete",
+                        listener: "{testEnvironment}.webdriver.wait",
+                        args:     [gpii.webdriver.until.elementLocated({ css: ".fl-overviewPanel-closeControl"})]
+                    },
+                    {
+                        event:    "{testEnvironment}.webdriver.events.onWaitComplete",
                         listener: "{testEnvironment}.webdriver.findElement",
                         args:     [gpii.webdriver.By.css(".fl-overviewPanel-closeControl")]
                     },
@@ -44,7 +70,7 @@ fluid.defaults("demos.accessibilityReports", {
                     {
                         event:    "{testEnvironment}.webdriver.events.onActionsHelperComplete",
                         listener: "{testEnvironment}.webdriver.wait",
-                        args:     [demos.isOverviewPanelCollapsed, 250, "Exceeded timeout for overview panel to collapse."]
+                        args:     ["{that}.isOverviewPanelCollapsed", 5000, "Timed out"]
                     },
                     {
                         event: "{testEnvironment}.webdriver.events.onWaitComplete",

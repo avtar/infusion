@@ -30,6 +30,11 @@ fluid.defaults("demos.overviewPanel.caseHolder", {
                     },
                     {
                         event:    "{testEnvironment}.webdriver.events.onGetComplete",
+                        listener: "{testEnvironment}.webdriver.wait",
+                        args:     [gpii.webdriver.until.elementLocated({ css: ".fl-overviewPanel-closeControl"})]
+                    },
+                    {
+                        event:    "{testEnvironment}.webdriver.events.onWaitComplete",
                         listener: "{testEnvironment}.webdriver.findElement",
                         args:     [gpii.webdriver.By.css(".fl-overviewPanel-closeControl")]
                     },
