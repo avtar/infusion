@@ -23,7 +23,8 @@
     "main": "./src/module/fluid.js",
     "scripts": {
         "prepublish": "grunt buildDists",
-        "test": "node tests/node-tests/basic-node-tests.js"
+        "test": "node tests/node-tests/basic-node-tests.js",
+        "webdriver-tests": "vagrant ssh -c 'cd ~vagrant/sync && DISPLAY=:0 BROWSERS=chrome testem ci --file tests/testem.json --launch \"Webdriver Tests\"'"
     },
     "engines": {
         "node": ">=0.10.0"
