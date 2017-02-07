@@ -7,6 +7,9 @@
         "Node Module Basic Packaging Tests": {
             "command": "node tests/node-tests/basic-node-tests.js --tap",
             "protocol": "tap"
+        },
+        "Webdriver Tests": {
+            "command": "node tests/demo-tests/axe-example.js"
         }
     }
 }
