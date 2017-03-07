@@ -1,0 +1,37 @@
+---
+.ci_env:
+  vms:
+    fedora:
+      cpu: 2
+      memory: 2048
+      clone: true      # Use the linked_clone Vagrant feature
+      autostart: true
+      box: inclusivedesign/fedora24
+
+.ci_stages:            # Stages to perform when 'ci test' command is invoked
+  - setup              # Name of the first stage to execute
+  - test               # Name of the second stage to execute
+
+setup:
+  stage: setup         # Name of the stage
+  script:
+    # Install Node.js LTS.
+    - sudo rpm -i --nosignature --force 'https://rpm.nodesource.com/pub_6.x/fc/24/x86_64/nodesource-release-fc24-1.noarch.rpm'
+    - sudo dnf install -y nodejs gcc-c++ make
+    # Prevent npm from using symlinks which won't work in VirtualBox shared folders on Windows
+    # hosts.
+    - npm config set bin-links false
+    - sudo npm install grunt-cli -g
+    - sudo npm install testem -g
+    - npm install
+    - sudo dnf -y upgrade firefox google-chrome-stable
+    # The next two steps are required to ensure chromedriver is available via the PATH environment
+    # variable.
+    - mkdir -p /home/vagrant/bin
+    - ln -sf "/vagrant/node_modules/chromedriver/bin/chromedriver" /home/vagrant/bin/
+    - grunt
+
+test:
+  stage: test
+  script:
+    - DISPLAY=:0 BROWSERS=chrome testem ci --file tests/testem.json --launch "Webdriver Tests"
